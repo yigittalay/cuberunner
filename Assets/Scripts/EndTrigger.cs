@@ -3,10 +3,9 @@ using UnityEngine;
 
 public class EndTrigger : MonoBehaviour
 {
-    public GameManager gameManager;
-    private void OnTriggerEnter()
+    private void OnTriggerEnter(Collider other)
     {
-        gameManager.CompleteLevet();
+        GameManager.Instance.CompleteLevet();
 
     }
 }

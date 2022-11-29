@@ -1,11 +1,21 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+    
     public GameObject GameOver;
     public GameObject completeLevelUI;
     public float restartDelay = 2f;
     bool gameHasEnded = false;
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public void CompleteLevet()
     {
         completeLevelUI.SetActive(true);

@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    bool superPower;
+   
     public Rigidbody rb;
     public float forwardForce = 4000f;
     public float sidewayForce = 100f;
     private bool jumpKeyWasPressed;
     private bool isGrounded;
+    
+    public SuperPowerBase LastHitSuperPower { get; private set; }
 
 
     // Start is called before the first frame update
@@ -43,18 +46,19 @@ public class PlayerMovement : MonoBehaviour
         }
         if (rb.position.y < -1f)
         {
-            FindObjectOfType<GameManager>().EndGame();
+            GameManager.Instance.EndGame();
         }
         if (!isGrounded)
         {
             return;
         }
-        if (jumpKeyWasPressed && superPower)
+        
+        if (jumpKeyWasPressed && LastHitSuperPower)
         {
             rb.AddForce(Vector3.up * 10, ForceMode.VelocityChange);
             jumpKeyWasPressed = false;
             isGrounded = true;
-            superPower = false;
+            LastHitSuperPower = null;
         }
     }
     private void OnCollisionEnter(Collision collision)
@@ -68,10 +72,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 6)
+        var superPowerBase = other.GetComponent<SuperPowerBase>();
+        if (superPowerBase)
         {
-            Destroy(other.gameObject);
-            superPower = true;
+            LastHitSuperPower = superPowerBase;
+            other.gameObject.SetActive(false);
         }
     }
 
